@@ -1,0 +1,70 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import pearsonr
+from pandas import read_csv
+from sklearn.linear_model import LinearRegression
+
+
+df=pd.read_csv(r"D:\Users\dell\Desktop\ggggg\IRIS.csv")
+
+
+print(df.head(10))
+print(df.tail(10))
+
+colors = ['blue', 'green'] #color of the dots
+plt.scatter(df['sepal_length'], df['sepal_width'])
+# Add labels and title
+plt.xlabel('sepal_lenght')
+plt.ylabel('sepal_width')
+plt.title('scatter plot')
+plt.show()
+
+#histogram
+plt.hist(df['sepal_width'])
+plt.title('Histogram')
+
+#box plot
+df.boxplot(by='sepal_length', column="sepal_width", grid=False)
+plt.title('box plot')
+# Show the plot
+plt.show()
+
+#person correlation
+list1=df["sepal_length"]
+list2=df["sepal_width"]
+
+corr,_=pearsonr(list1,list2)
+print("person correlation is:",corr)
+
+#independent variable=year
+#dependant variable=rank
+
+
+#linear relationship
+X = df[['sepal_length']].values.reshape(-1,1) # Independent variable (year)
+y = df['sepal_width'].values # Dependent variable (rank)
+# Create a linear regression model
+model = LinearRegression()
+
+# Train the model on the data
+model.fit(X, y)
+
+# Predict ratings based on the year
+predicted_ratings = model.predict(X)
+
+# Plot the original data
+plt.scatter(df['sepal_length'], df['sepal_width'], color='blue', label='Actual Ratings')
+
+# Plot the regression line (Predicted ratings)
+plt.plot(df['sepal_length'], predicted_ratings, color='red', label='Predicted Ratings')
+
+plt.xlabel('sepal_length')
+plt.ylabel('sepal_width')
+plt.title('monthbalance vs sepal_width with Regression Line')
+plt.legend()
+plt.show()
+
+# Print the model's slope and intercept
+print("Slope (Coefficient):", model.coef_[0])
+print("Intercept:", model.intercept_)
